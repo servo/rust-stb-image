@@ -1,0 +1,9 @@
+#[link(name = "stb_image",
+       vers = "0.1")];
+#[crate_type = "lib"];
+
+use std;
+
+mod stb_image;
+mod image;
+
