@@ -12,6 +12,8 @@ STB_IMAGE_OBJS=$(STB_IMAGE_C_SRC:%.c=%.o)
 
 RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 
+CFLAGS += -fPIC
+
 .PHONE: all
 all:	libstb-image.dummy
 
