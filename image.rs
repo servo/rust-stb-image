@@ -23,11 +23,9 @@ fn load(path: str) -> image unsafe {
     let mut width = 0 as c_int;
     let mut height = 0 as c_int;
     let mut depth = 0 as c_int;
-    let buffer = as_c_str(path) {
-        |bytes|
-        stbi_load(bytes, addr_of(width), addr_of(height), addr_of(depth),
-                  0 as c_int)
-    };
+    let buffer = as_c_str(path, |bytes| {
+        stbi_load(bytes, addr_of(width), addr_of(height), addr_of(depth), 0 as c_int)
+    });
     if is_null(buffer) {
         fail "failed to load image";
     }
