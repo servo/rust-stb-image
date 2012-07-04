@@ -20,11 +20,11 @@ const STBI_rgb_alpha: u32 = 4_u32;
 
 #[link_args="-L. -lstb-image"]
 #[nolink]
-native mod m {
+extern mod m {
 }
 
 #[nolink]
-native mod bindgen {
+extern mod bindgen {
 
 fn stbi_load_from_memory(++buffer: *stbi_uc, ++len: c_int, ++x: *c_int, ++y: *c_int, ++comp: *c_int, ++req_comp: c_int) -> *stbi_uc;
 
