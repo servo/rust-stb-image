@@ -9,9 +9,9 @@ class image {
     let width: uint;
     let height: uint;
     let depth: uint;
-    let data: [u8];
+    let data: ~[u8];
 
-    new(width: uint, height: uint, depth: uint, -data: [u8]) {
+    new(width: uint, height: uint, depth: uint, -data: ~[u8]) {
         self.width = width;
         self.height = height;
         self.depth = depth;

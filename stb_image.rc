@@ -2,8 +2,6 @@
        vers = "0.1")];
 #[crate_type = "lib"];
 
-#[warn(no_old_vecs)];
-
 use std;
 
 mod stb_image;
