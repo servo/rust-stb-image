@@ -33,6 +33,6 @@ fn load(path: ~str) -> image unsafe {
     // FIXME: Shouldn't copy; instead we should use a sendable resource. They
     // aren't particularly safe yet though.
     let data = from_buf(buffer, (width * height * depth) as uint);
-    ret image(width as uint, height as uint, depth as uint, data);
+    return image(width as uint, height as uint, depth as uint, data);
 }
 
