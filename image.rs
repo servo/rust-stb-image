@@ -20,7 +20,7 @@ class image {
     }
 }
 
-fn load(path: ~str) -> image unsafe {
+fn load(path: ~str) -> option<image> unsafe {
     let mut width = 0 as c_int;
     let mut height = 0 as c_int;
     let mut depth = 0 as c_int;
@@ -28,16 +28,16 @@ fn load(path: ~str) -> image unsafe {
         stbi_load(bytes, addr_of(width), addr_of(height), addr_of(depth), 0 as c_int)
     });
     if is_null(buffer) {
-        fail ~"failed to load image";
+        return none;
     }
 
     // FIXME: Shouldn't copy; instead we should use a sendable resource. They
     // aren't particularly safe yet though.
     let data = from_buf(buffer, (width * height * depth) as uint);
-    return image(width as uint, height as uint, depth as uint, data);
+    return some(image(width as uint, height as uint, depth as uint, data));
 }
 
-fn load_from_memory(buffer: &[u8]) -> image unsafe {
+fn load_from_memory(buffer: &[u8]) -> option<image> unsafe {
     let mut width = 0 as c_int;
     let mut height = 0 as c_int;
     let mut depth = 0 as c_int;
@@ -45,11 +45,11 @@ fn load_from_memory(buffer: &[u8]) -> image unsafe {
         stbi_load_from_memory(bytes, len as c_int, addr_of(width), addr_of(height), addr_of(depth), 0 as c_int)
     });
     if is_null(buffer) {
-        fail ~"failed to load image";
+        return none;
     }
 
     // FIXME: Shouldn't copy; instead we should use a sendable resource. They
     // aren't particularly safe yet though.
     let data = from_buf(buffer, (width * height * depth) as uint);
-    return image(width as uint, height as uint, depth as uint, data);
+    return some(image(width as uint, height as uint, depth as uint, data));
 }
