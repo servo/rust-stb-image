@@ -6,7 +6,7 @@ import str::as_c_str;
 import vec::as_buf;
 import vec::unsafe::from_buf;
 
-class image {
+struct image {
     let width: uint;
     let height: uint;
     let depth: uint;
