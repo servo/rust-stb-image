@@ -25,8 +25,9 @@ fn load(path: ~str) -> option<image> unsafe {
         let mut width = 0 as c_int;
         let mut height = 0 as c_int;
         let mut depth = 0 as c_int;
+        let force_depth = 4 as c_int;
         let buffer = as_c_str(path, |bytes| {
-            stbi_load(bytes, addr_of(width), addr_of(height), addr_of(depth), 0 as c_int)
+            stbi_load(bytes, addr_of(width), addr_of(height), addr_of(depth), force_depth)
         });
 
         if is_null(buffer) {
@@ -34,9 +35,9 @@ fn load(path: ~str) -> option<image> unsafe {
         } else {
             // FIXME: Shouldn't copy; instead we should use a sendable resource. They
             // aren't particularly safe yet though.
-            let data = from_buf(buffer, (width * height * depth) as uint);
+            let data = from_buf(buffer, (width * height * force_depth) as uint);
             libc::free(buffer as *c_void);
-            some(image(width as uint, height as uint, depth as uint, data))
+            some(image(width as uint, height as uint, force_depth as uint, data))
         }
     }
 }
@@ -46,8 +47,9 @@ fn load_from_memory(buffer: &[u8]) -> option<image> unsafe {
         let mut width = 0 as c_int;
         let mut height = 0 as c_int;
         let mut depth = 0 as c_int;
+        let force_depth = 4 as c_int;
         let buffer = as_buf(buffer, |bytes, len| {
-            stbi_load_from_memory(bytes, len as c_int, addr_of(width), addr_of(height), addr_of(depth), 0 as c_int)
+            stbi_load_from_memory(bytes, len as c_int, addr_of(width), addr_of(height), addr_of(depth), force_depth)
         });
 
         if is_null(buffer) {
@@ -55,9 +57,9 @@ fn load_from_memory(buffer: &[u8]) -> option<image> unsafe {
         } else {
             // FIXME: Shouldn't copy; instead we should use a sendable resource. They
             // aren't particularly safe yet though.
-            let data = from_buf(buffer, (width * height * depth) as uint);
+            let data = from_buf(buffer, (width * height * force_depth) as uint);
             libc::free(buffer as *c_void);
-            some(image(width as uint, height as uint, depth as uint, data))
+            some(image(width as uint, height as uint, force_depth as uint, data))
         }
     }
 }
