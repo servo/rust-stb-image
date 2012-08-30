@@ -20,7 +20,7 @@ struct image {
     }
 }
 
-fn load(path: ~str) -> option<image> unsafe {
+fn load(path: ~str) -> Option<image> unsafe {
     do task::unkillable {
         let mut width = 0 as c_int;
         let mut height = 0 as c_int;
@@ -31,18 +31,18 @@ fn load(path: ~str) -> option<image> unsafe {
         });
 
         if is_null(buffer) {
-            none
+            None
         } else {
             // FIXME: Shouldn't copy; instead we should use a sendable resource. They
             // aren't particularly safe yet though.
             let data = from_buf(buffer, (width * height * force_depth) as uint);
             libc::free(buffer as *c_void);
-            some(image(width as uint, height as uint, force_depth as uint, data))
+            Some(image(width as uint, height as uint, force_depth as uint, data))
         }
     }
 }
 
-fn load_from_memory(buffer: &[u8]) -> option<image> unsafe {
+fn load_from_memory(buffer: &[u8]) -> Option<image> unsafe {
     do task::unkillable {
         let mut width = 0 as c_int;
         let mut height = 0 as c_int;
@@ -53,13 +53,13 @@ fn load_from_memory(buffer: &[u8]) -> option<image> unsafe {
         });
 
         if is_null(buffer) {
-            none
+            None
         } else {
             // FIXME: Shouldn't copy; instead we should use a sendable resource. They
             // aren't particularly safe yet though.
             let data = from_buf(buffer, (width * height * force_depth) as uint);
             libc::free(buffer as *c_void);
-            some(image(width as uint, height as uint, force_depth as uint, data))
+            Some(image(width as uint, height as uint, force_depth as uint, data))
         }
     }
 }
