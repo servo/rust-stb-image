@@ -6,21 +6,23 @@ import str::as_c_str;
 import vec::as_buf;
 import vec::unsafe::from_buf;
 
-struct image {
-    let width: uint;
-    let height: uint;
-    let depth: uint;
-    let data: ~[u8];
+struct Image {
+    width: uint,
+    height: uint,
+    depth: uint,
+    data: ~[u8],
+}
 
-    new(width: uint, height: uint, depth: uint, -data: ~[u8]) {
-        self.width = width;
-        self.height = height;
-        self.depth = depth;
-        self.data = data;
+fn new_image(width: uint, height: uint, depth: uint, -data: ~[u8]) -> Image {
+    Image {
+        width : width,
+        height : height,
+        depth : depth,
+        data : data,
     }
 }
 
-fn load(path: ~str) -> Option<image> unsafe {
+fn load(path: ~str) -> Option<Image> unsafe {
     do task::unkillable {
         let mut width = 0 as c_int;
         let mut height = 0 as c_int;
@@ -37,12 +39,12 @@ fn load(path: ~str) -> Option<image> unsafe {
             // aren't particularly safe yet though.
             let data = from_buf(buffer, (width * height * force_depth) as uint);
             libc::free(buffer as *c_void);
-            Some(image(width as uint, height as uint, force_depth as uint, data))
+            Some(new_image(width as uint, height as uint, force_depth as uint, data))
         }
     }
 }
 
-fn load_from_memory(buffer: &[u8]) -> Option<image> unsafe {
+fn load_from_memory(buffer: &[u8]) -> Option<Image> unsafe {
     do task::unkillable {
         let mut width = 0 as c_int;
         let mut height = 0 as c_int;
@@ -59,7 +61,7 @@ fn load_from_memory(buffer: &[u8]) -> Option<image> unsafe {
             // aren't particularly safe yet though.
             let data = from_buf(buffer, (width * height * force_depth) as uint);
             libc::free(buffer as *c_void);
-            Some(image(width as uint, height as uint, force_depth as uint, data))
+            Some(new_image(width as uint, height as uint, force_depth as uint, data))
         }
     }
 }
