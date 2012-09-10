@@ -5,5 +5,5 @@
 use std;
 
 mod stb_image;
-mod image;
+mod Image;
 
