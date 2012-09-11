@@ -1,10 +1,10 @@
-import stb_image::*;
-import stb_image::bindgen::*;
-import libc::types::os::arch::c95::c_int;
-import ptr::{addr_of, is_null};
-import str::as_c_str;
-import vec::as_buf;
-import vec::unsafe::from_buf;
+use stb_image::*;
+use stb_image::bindgen::*;
+use libc::types::os::arch::c95::c_int;
+use ptr::{addr_of, is_null};
+use str::as_c_str;
+use vec::as_buf;
+use vec::unsafe::from_buf;
 
 struct Image {
     width: uint,
