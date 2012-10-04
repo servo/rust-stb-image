@@ -1,19 +1,19 @@
 use stb_image::*;
 use stb_image::bindgen::*;
 use libc::types::os::arch::c95::c_int;
-use ptr::{addr_of, is_null};
+use ptr::{is_null, to_unsafe_ptr};
 use str::as_c_str;
 use vec::as_imm_buf;
 use vec::raw::from_buf;
 
-struct Image {
+pub struct Image {
     width: uint,
     height: uint,
     depth: uint,
     data: ~[u8],
 }
 
-fn new_image(width: uint, height: uint, depth: uint, -data: ~[u8]) -> Image {
+pub fn new_image(width: uint, height: uint, depth: uint, -data: ~[u8]) -> Image {
     Image {
         width : width,
         height : height,
@@ -22,14 +22,15 @@ fn new_image(width: uint, height: uint, depth: uint, -data: ~[u8]) -> Image {
     }
 }
 
-fn load(path: ~str) -> Option<Image> unsafe {
+pub fn load(path: ~str) -> Option<Image> unsafe {
     do task::unkillable {
         let mut width = 0 as c_int;
         let mut height = 0 as c_int;
         let mut depth = 0 as c_int;
         let force_depth = 4 as c_int;
         let buffer = as_c_str(path, |bytes| {
-            stbi_load(bytes, addr_of(width), addr_of(height), addr_of(depth), force_depth)
+            stbi_load(bytes, to_unsafe_ptr(&width), to_unsafe_ptr(&height), to_unsafe_ptr(&depth),
+                      force_depth)
         });
 
         if is_null(buffer) {
@@ -44,14 +45,15 @@ fn load(path: ~str) -> Option<Image> unsafe {
     }
 }
 
-fn load_from_memory(buffer: &[u8]) -> Option<Image> unsafe {
+pub fn load_from_memory(buffer: &[u8]) -> Option<Image> unsafe {
     do task::unkillable {
         let mut width = 0 as c_int;
         let mut height = 0 as c_int;
         let mut depth = 0 as c_int;
         let force_depth = 4 as c_int;
         let buffer = as_imm_buf(buffer, |bytes, len| {
-            stbi_load_from_memory(bytes, len as c_int, addr_of(width), addr_of(height), addr_of(depth), force_depth)
+            stbi_load_from_memory(bytes, len as c_int, to_unsafe_ptr(&width),
+                                  to_unsafe_ptr(&height), to_unsafe_ptr(&depth), force_depth)
         });
 
         if is_null(buffer) {

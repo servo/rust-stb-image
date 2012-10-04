@@ -4,6 +4,6 @@
 
 extern mod std;
 
-mod stb_image;
-mod image;
+pub mod stb_image;
+pub mod image;
 
