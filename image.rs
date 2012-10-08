@@ -13,7 +13,7 @@ pub struct Image {
     data: ~[u8],
 }
 
-pub fn new_image(width: uint, height: uint, depth: uint, -data: ~[u8]) -> Image {
+pub fn new_image(width: uint, height: uint, depth: uint, data: ~[u8]) -> Image {
     Image {
         width : width,
         height : height,
