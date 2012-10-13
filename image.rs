@@ -4,7 +4,7 @@ use libc::types::os::arch::c95::c_int;
 use ptr::{is_null, to_unsafe_ptr};
 use str::as_c_str;
 use vec::as_imm_buf;
-use vec::raw::from_buf;
+use vec::raw::from_buf_raw;
 
 pub struct Image {
     width: uint,
@@ -38,7 +38,7 @@ pub fn load(path: ~str) -> Option<Image> unsafe {
         } else {
             // FIXME: Shouldn't copy; instead we should use a sendable resource. They
             // aren't particularly safe yet though.
-            let data = from_buf(buffer, (width * height * force_depth) as uint);
+            let data = from_buf_raw(buffer, (width * height * force_depth) as uint);
             libc::free(buffer as *c_void);
             Some(new_image(width as uint, height as uint, force_depth as uint, data))
         }
@@ -61,7 +61,7 @@ pub fn load_from_memory(buffer: &[u8]) -> Option<Image> unsafe {
         } else {
             // FIXME: Shouldn't copy; instead we should use a sendable resource. They
             // aren't particularly safe yet though.
-            let data = from_buf(buffer, (width * height * force_depth) as uint);
+            let data = from_buf_raw(buffer, (width * height * force_depth) as uint);
             libc::free(buffer as *c_void);
             Some(new_image(width as uint, height as uint, force_depth as uint, data))
         }
