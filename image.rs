@@ -18,7 +18,7 @@ pub fn new_image(width: uint, height: uint, depth: uint, data: ~[u8]) -> Image {
         width : width,
         height : height,
         depth : depth,
-        data : data,
+        data : move data,
     }
 }
 
@@ -40,7 +40,7 @@ pub fn load(path: ~str) -> Option<Image> unsafe {
             // aren't particularly safe yet though.
             let data = from_buf_raw(buffer, (width * height * force_depth) as uint);
             libc::free(buffer as *c_void);
-            Some(new_image(width as uint, height as uint, force_depth as uint, data))
+            Some(new_image(width as uint, height as uint, force_depth as uint, move data))
         }
     }
 }
@@ -63,7 +63,7 @@ pub fn load_from_memory(buffer: &[u8]) -> Option<Image> unsafe {
             // aren't particularly safe yet though.
             let data = from_buf_raw(buffer, (width * height * force_depth) as uint);
             libc::free(buffer as *c_void);
-            Some(new_image(width as uint, height as uint, force_depth as uint, data))
+            Some(new_image(width as uint, height as uint, force_depth as uint, move data))
         }
     }
 }
