@@ -14,7 +14,7 @@ RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 
 CFLAGS += -fPIC
 
-.PHONE: all
+.PHONY: all
 all:	libstb-image.dummy
 
 %.o:	%.c
