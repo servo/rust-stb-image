@@ -101,17 +101,18 @@ pub fn load_from_memory_with_depth(buffer: &[u8], force_depth: uint, convert_hdr
                     } else {
                         ImageF32( load_internal(buffer,width,height,depth) )
                     }
-                }else {
-                let buffer = stbi_load_from_memory(
-                    bytes, len as c_int, to_unsafe_ptr(&width),
-                    to_unsafe_ptr(&height), to_unsafe_ptr(&depth),
-                    force_depth as c_int);
-                if is_null(buffer) {
-                    Error
                 } else {
-                    ImageU8( load_internal(buffer,width,height,depth) )
+                    let buffer = stbi_load_from_memory(
+                        bytes, len as c_int, to_unsafe_ptr(&width),
+                        to_unsafe_ptr(&height), to_unsafe_ptr(&depth),
+                        force_depth as c_int);
+                    if is_null(buffer) {
+                        Error
+                    } else {
+                        ImageU8( load_internal(buffer,width,height,depth) )
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 }
