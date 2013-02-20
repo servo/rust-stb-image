@@ -18,7 +18,7 @@ pub fn new_image<T>(width: uint, height: uint, depth: uint, data: ~[T]) -> Image
         width   : width,
         height  : height,
         depth   : depth,
-        data    : move data,
+        data    : data,
     }
 }
 
@@ -30,7 +30,7 @@ enum LoadResult {
 
 pub fn load(path: ~str) -> LoadResult {
     let force_depth = 0;
-    load_with_depth(move path, force_depth, false)
+    load_with_depth(path, force_depth, false)
 }
 
 
