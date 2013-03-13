@@ -1,4 +1,3 @@
-use stb_image::*;
 use stb_image::bindgen::*;
 use core::libc;
 use core::libc::{c_void, c_int};

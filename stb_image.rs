@@ -5,11 +5,11 @@ use core::libc::*;
 
 type stbi_uc = c_uchar;
 
-type stbi_io_callbacks = {
+struct stbi_io_callbacks {
     read: *u8,
     skip: *u8,
     eof: *u8,
-};
+}
 
 type enum_unnamed1 = c_uint;
 const STBI_default: u32 = 0_u32;
