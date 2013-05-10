@@ -35,21 +35,21 @@ extern mod m {
 #[nolink]
 pub extern mod bindgen {
 
-fn stbi_load_from_memory(buffer: *stbi_uc, len: c_int, x: *c_int, y: *c_int, comp: *c_int, req_comp: c_int) -> *stbi_uc;
+fn stbi_load_from_memory(buffer: *stbi_uc, len: c_int, x: *mut c_int, y: *mut c_int, comp: *mut c_int, req_comp: c_int) -> *stbi_uc;
 
-fn stbi_load(filename: *c_char, x: *c_int, y: *c_int, comp: *c_int, req_comp: c_int) -> *stbi_uc;
+fn stbi_load(filename: *c_char, x: *mut c_int, y: *mut c_int, comp: *mut c_int, req_comp: c_int) -> *stbi_uc;
 
-fn stbi_load_from_file(f: *FILE, x: *c_int, y: *c_int, comp: *c_int, req_comp: c_int) -> *stbi_uc;
+fn stbi_load_from_file(f: *FILE, x: *mut c_int, y: *mut c_int, comp: *mut c_int, req_comp: c_int) -> *stbi_uc;
 
-fn stbi_load_from_callbacks(clbk: *stbi_io_callbacks, user: *c_void, x: *c_int, y: *c_int, comp: *c_int, req_comp: c_int) -> *stbi_uc;
+fn stbi_load_from_callbacks(clbk: *stbi_io_callbacks, user: *c_void, x: *mut c_int, y: *mut c_int, comp: *mut c_int, req_comp: c_int) -> *stbi_uc;
 
-fn stbi_loadf_from_memory(buffer: *stbi_uc, len: c_int, x: *c_int, y: *c_int, comp: *c_int, req_comp: c_int) -> *c_float;
+fn stbi_loadf_from_memory(buffer: *stbi_uc, len: c_int, x: *mut c_int, y: *mut c_int, comp: *mut c_int, req_comp: c_int) -> *c_float;
 
-fn stbi_loadf(filename: *c_char, x: *c_int, y: *c_int, comp: *c_int, req_comp: c_int) -> *c_float;
+fn stbi_loadf(filename: *c_char, x: *mut c_int, y: *mut c_int, comp: *mut c_int, req_comp: c_int) -> *c_float;
 
-fn stbi_loadf_from_file(f: *FILE, x: *c_int, y: *c_int, comp: *c_int, req_comp: c_int) -> *c_float;
+fn stbi_loadf_from_file(f: *FILE, x: *mut c_int, y: *mut c_int, comp: *mut c_int, req_comp: c_int) -> *c_float;
 
-fn stbi_loadf_from_callbacks(clbk: *stbi_io_callbacks, user: *c_void, x: *c_int, y: *c_int, comp: *c_int, req_comp: c_int) -> *c_float;
+fn stbi_loadf_from_callbacks(clbk: *stbi_io_callbacks, user: *c_void, x: *mut c_int, y: *mut c_int, comp: *mut c_int, req_comp: c_int) -> *c_float;
 
 fn stbi_hdr_to_ldr_gamma(gamma: c_float);
 
