@@ -20,12 +20,9 @@ static STBI_rgb_alpha: u32 = 4_u32;
 
 #[link_args="-L. -lstb-image"]
 #[nolink]
-mod m {
-  extern {
-  }
+extern {
 }
 
-#[nolink]
 pub mod bindgen {
   use core::libc::*;
 
