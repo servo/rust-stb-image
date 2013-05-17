@@ -11,15 +11,6 @@
 
 use core::libc::*;
 
-
-type stbi_uc = c_uchar;
-
-struct stbi_io_callbacks {
-    read: *u8,
-    skip: *u8,
-    eof: *u8,
-}
-
 type enum_unnamed1 = c_uint;
 static STBI_default: u32 = 0_u32;
 static STBI_grey: u32 = 1_u32;
@@ -29,11 +20,20 @@ static STBI_rgb_alpha: u32 = 4_u32;
 
 #[link_args="-L. -lstb-image"]
 #[nolink]
-extern mod m {
+extern {
 }
 
-#[nolink]
-pub extern mod bindgen {
+pub mod bindgen {
+  use core::libc::*;
+
+  type stbi_uc = c_uchar;
+  struct stbi_io_callbacks {
+    read: *u8,
+    skip: *u8,
+    eof: *u8,
+  }
+
+  pub extern {
 
 fn stbi_load_from_memory(buffer: *stbi_uc, len: c_int, x: *mut c_int, y: *mut c_int, comp: *mut c_int, req_comp: c_int) -> *stbi_uc;
 
@@ -93,4 +93,5 @@ fn stbi_zlib_decode_noheader_malloc(buffer: *c_char, len: c_int, outlen: *c_int)
 
 fn stbi_zlib_decode_noheader_buffer(obuffer: *c_char, olen: c_int, ibuffer: *c_char, ilen: c_int) -> c_int;
 
+  }
 }
