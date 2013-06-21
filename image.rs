@@ -9,12 +9,13 @@
 
 use stb_image::bindgen::*;
 
-use core::libc;
-use core::libc::{c_void, c_int};
-use core::ptr::{is_null, to_mut_unsafe_ptr};
-use core::str::as_c_str;
-use core::vec::as_imm_buf;
-use core::vec::raw::from_buf_raw;
+use std::libc;
+use std::libc::{c_void, c_int};
+use std::ptr::{is_null, to_mut_unsafe_ptr};
+use std::str::as_c_str;
+use std::task;
+use std::vec::as_imm_buf;
+use std::vec::raw::from_buf_raw;
 
 pub struct Image<T> {
     width   : uint,
