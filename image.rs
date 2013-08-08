@@ -12,7 +12,6 @@ use stb_image::bindgen::*;
 use std::libc;
 use std::libc::{c_void, c_int};
 use std::ptr::{is_null, to_mut_unsafe_ptr};
-use std::str::as_c_str;
 use std::task;
 use std::vec::raw::from_buf_raw;
 
@@ -64,7 +63,8 @@ pub fn load_with_depth(path: ~str, force_depth: uint, convert_hdr:bool) -> LoadR
             let mut width   = 0 as c_int;
             let mut height  = 0 as c_int;
             let mut depth   = 0 as c_int;
-            as_c_str(path, |bytes| {
+            do path.as_c_str |bytes|
+            {
                 if !convert_hdr && stbi_is_hdr(bytes)!=0   {
                     let buffer = stbi_loadf(bytes,
                                             to_mut_unsafe_ptr(&mut width),
@@ -88,7 +88,7 @@ pub fn load_with_depth(path: ~str, force_depth: uint, convert_hdr:bool) -> LoadR
                         ImageU8( load_internal(buffer,width,height,depth) )
                     }
                 }
-            })
+            }
         }
     }
 }
