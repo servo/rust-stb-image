@@ -63,8 +63,7 @@ pub fn load_with_depth(path: ~str, force_depth: uint, convert_hdr:bool) -> LoadR
             let mut width   = 0 as c_int;
             let mut height  = 0 as c_int;
             let mut depth   = 0 as c_int;
-            do path.as_c_str |bytes|
-            {
+            do path.as_c_str |bytes| {
                 if !convert_hdr && stbi_is_hdr(bytes)!=0   {
                     let buffer = stbi_loadf(bytes,
                                             to_mut_unsafe_ptr(&mut width),
