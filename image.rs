@@ -43,7 +43,7 @@ pub fn load(path: ~str) -> LoadResult {
 }
 
 
-priv fn load_internal<T>(buf : *T, w : c_int, h : c_int, d : c_int) -> Image<T> {
+fn load_internal<T>(buf : *T, w : c_int, h : c_int, d : c_int) -> Image<T> {
     unsafe {
         // FIXME: Shouldn't copy; instead we should use a sendable resource. They
         // aren't particularly safe yet though.
@@ -63,7 +63,7 @@ pub fn load_with_depth(path: ~str, force_depth: uint, convert_hdr:bool) -> LoadR
             let mut width   = 0 as c_int;
             let mut height  = 0 as c_int;
             let mut depth   = 0 as c_int;
-            do path.as_c_str |bytes| {
+            do path.to_c_str().with_ref |bytes| {
                 if !convert_hdr && stbi_is_hdr(bytes)!=0   {
                     let buffer = stbi_loadf(bytes,
                                             to_mut_unsafe_ptr(&mut width),
