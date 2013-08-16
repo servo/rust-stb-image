@@ -25,7 +25,7 @@ libstb-image.dummy: stb_image.rc $(RUST_SRC) ./libstb-image.a
 	touch $@
 
 stb-image-test: stb_image.rc $(RUST_SRC) ./libstb-image.a
-	$(RUSTC) $(RUSTFLAGS) $< --out-dir . --test
+	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
 
 ./libstb-image.a: $(STB_IMAGE_OBJS)
 	$(AR) rcs $@ $^
