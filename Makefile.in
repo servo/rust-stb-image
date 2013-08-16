@@ -21,11 +21,11 @@ all:	libstb-image.dummy
 	$(CC) $< -o $@ -c $(CFLAGS)
 
 libstb-image.dummy: stb_image.rc $(RUST_SRC) ./libstb-image.a
-	$(RUSTC) $(RUSTFLAGS) $< -o $@
+	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
 	touch $@
 
 stb-image-test: stb_image.rc $(RUST_SRC) ./libstb-image.a
-	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
+	$(RUSTC) $(RUSTFLAGS) $< --out-dir . --test
 
 ./libstb-image.a: $(STB_IMAGE_OBJS)
 	$(AR) rcs $@ $^
