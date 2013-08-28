@@ -43,6 +43,7 @@ pub fn load(path: ~str) -> LoadResult {
 }
 
 
+#[fixed_stack_segment]
 fn load_internal<T>(buf : *T, w : c_int, h : c_int, d : c_int) -> Image<T> {
     unsafe {
         // FIXME: Shouldn't copy; instead we should use a sendable resource. They
@@ -57,6 +58,7 @@ fn load_internal<T>(buf : *T, w : c_int, h : c_int, d : c_int) -> Image<T> {
     }
 }
 
+#[fixed_stack_segment]
 pub fn load_with_depth(path: ~str, force_depth: uint, convert_hdr:bool) -> LoadResult {
     unsafe {
         do task::unkillable {
@@ -97,6 +99,7 @@ pub fn load_from_memory(buffer: &[u8]) -> LoadResult {
     load_from_memory_with_depth(buffer, force_depth, false)
 }
 
+#[fixed_stack_segment]
 pub fn load_from_memory_with_depth(buffer: &[u8], force_depth: uint, convert_hdr:bool) -> LoadResult {
     unsafe {
         do task::unkillable {
