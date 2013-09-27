@@ -31,7 +31,7 @@ pub fn new_image<T>(width: uint, height: uint, depth: uint, data: ~[T]) -> Image
     }
 }
 
-enum LoadResult {
+pub enum LoadResult {
     Error,
     ImageU8(Image<u8>),
     ImageF32(Image<f32>),
