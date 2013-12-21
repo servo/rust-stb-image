@@ -14,16 +14,11 @@
 use std::libc::*;
 
 type enum_unnamed1 = c_uint;
-static STBI_default: u32 = 0_u32;
-static STBI_grey: u32 = 1_u32;
-static STBI_grey_alpha: u32 = 2_u32;
-static STBI_rgb: u32 = 3_u32;
-static STBI_rgb_alpha: u32 = 4_u32;
-
-#[link_args="-L. -lstb-image"]
-#[nolink]
-extern {
-}
+//static STBI_default: u32 = 0_u32;
+//static STBI_grey: u32 = 1_u32;
+//static STBI_grey_alpha: u32 = 2_u32;
+//static STBI_rgb: u32 = 3_u32;
+//static STBI_rgb_alpha: u32 = 4_u32;
 
 pub mod bindgen {
   use std::libc::*;
@@ -35,6 +30,7 @@ pub mod bindgen {
     eof: *u8,
   }
 
+#[link(name = "stb-image")]
 extern {
 
 pub fn stbi_load_from_memory(buffer: *stbi_uc, len: c_int, x: *mut c_int, y: *mut c_int, comp: *mut c_int, req_comp: c_int) -> *stbi_uc;
