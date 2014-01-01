@@ -31,9 +31,18 @@ pub fn new_image<T>(width: uint, height: uint, depth: uint, data: ~[T]) -> Image
 }
 
 pub enum LoadResult {
-    Error,
+    Error(~str),
     ImageU8(Image<u8>),
     ImageF32(Image<f32>),
+}
+
+impl LoadResult {
+    pub fn from_result(res: Result<LoadResult,~Any>)-> LoadResult {
+        match res {
+            Ok(res) => res,
+            Err(e)  => Error(e.to_str()),
+        }
+    }
 }
 
 pub fn load(path: ~str) -> LoadResult {
@@ -47,7 +56,7 @@ fn load_internal<T>(buf : *T, w : c_int, h : c_int, d : c_int) -> Image<T> {
         // FIXME: Shouldn't copy; instead we should use a sendable resource. They
         // aren't particularly safe yet though.
         let data = from_buf_raw(buf, (w * h * d) as uint);
-        libc::free(buf as *c_void);
+        libc::free(buf as *mut c_void);
         Image::<T>{
             width   : w as uint,
             height  : h as uint,
@@ -69,9 +78,9 @@ pub fn load_with_depth(path: ~str, force_depth: uint, convert_hdr:bool) -> LoadR
                                         to_mut_unsafe_ptr(&mut depth),
                                         force_depth as c_int);
                 if is_null(buffer) {
-                    Error
+                    Error(~"stbi_loadf failed")
                 } else {
-                    ImageF32( load_internal(buffer,width,height,depth) )
+                    ImageF32(load_internal(buffer, width, height, depth))
                 }
             } else {
                 let buffer = stbi_load(bytes,
@@ -80,9 +89,9 @@ pub fn load_with_depth(path: ~str, force_depth: uint, convert_hdr:bool) -> LoadR
                                        to_mut_unsafe_ptr(&mut depth),
                                        force_depth as c_int);
                 if is_null(buffer) {
-                    Error
+                    Error(~"stbi_load failed")
                 } else {
-                    ImageU8( load_internal(buffer,width,height,depth) )
+                    ImageU8(load_internal(buffer, width, height, depth))
                 }
             }
         })
@@ -107,10 +116,10 @@ pub fn load_from_memory_with_depth(buffer: &[u8], force_depth: uint, convert_hdr
                                                 to_mut_unsafe_ptr(&mut depth),
                                                 force_depth as c_int);
             if is_null(buffer) {
-                Error
+                Error(~"stbi_loadf_from_memory failed")
             } else {
                 let actual_depth = if force_depth != 0 { force_depth as c_int } else { depth };
-                ImageF32( load_internal(buffer,width,height,actual_depth) )
+                ImageF32(load_internal(buffer, width, height, actual_depth))
             }
         } else {
             let buffer = stbi_load_from_memory(buffer.as_ptr(),
@@ -120,10 +129,10 @@ pub fn load_from_memory_with_depth(buffer: &[u8], force_depth: uint, convert_hdr
                                                to_mut_unsafe_ptr(&mut depth),
                                                force_depth as c_int);
             if is_null(buffer) {
-                Error
+                Error(~"stbi_load_from_memory failed")
             } else {
                 let actual_depth = if force_depth != 0 { force_depth as c_int } else { depth };
-                ImageU8( load_internal(buffer,width,height,actual_depth) )
+                ImageU8(load_internal(buffer, width, height, actual_depth))
             }
         }
     }
