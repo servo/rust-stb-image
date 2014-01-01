@@ -20,7 +20,7 @@ static STBI_grey_alpha: u32 = 2_u32;
 static STBI_rgb: u32 = 3_u32;
 static STBI_rgb_alpha: u32 = 4_u32;
 
-#[link_args="-L. -lstb-image"]
+#[link(name = "stb-image")]
 #[nolink]
 extern {
 }
