@@ -3,4 +3,5 @@
 *.a
 *.dummy
 *.o
+*.rlib
 Makefile
