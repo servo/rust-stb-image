@@ -12,7 +12,7 @@ use stb_image::bindgen::*;
 use std::any::Any;
 use std::libc;
 use std::libc::{c_void, c_int};
-use std::vec::raw::from_buf_raw;
+use std::slice::raw::from_buf_raw;
 
 pub struct Image<T> {
     width   : uint,
