@@ -15,10 +15,10 @@ use std::libc::{c_void, c_int};
 use std::slice::raw::from_buf_raw;
 
 pub struct Image<T> {
-    width   : uint,
-    height  : uint,
-    depth   : uint,
-    data    : ~[T],
+    pub width   : uint,
+    pub height  : uint,
+    pub depth   : uint,
+    pub data    : ~[T],
 }
 
 pub fn new_image<T>(width: uint, height: uint, depth: uint, data: ~[T]) -> Image<T> {
