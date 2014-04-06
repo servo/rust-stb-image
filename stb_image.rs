@@ -11,7 +11,7 @@
 
 #![allow(non_uppercase_statics, non_camel_case_types)]
 
-use std::libc::*;
+use libc::*;
 
 type enum_unnamed1 = c_uint;
 //static STBI_default: u32 = 0_u32;
@@ -21,7 +21,7 @@ type enum_unnamed1 = c_uint;
 //static STBI_rgb_alpha: u32 = 4_u32;
 
 pub mod bindgen {
-  use std::libc::*;
+  use libc::*;
 
   pub type stbi_uc = c_uchar;
   pub struct stbi_io_callbacks {
