@@ -45,7 +45,7 @@ impl LoadResult {
     }
 }
 
-pub fn load(path: ~str) -> LoadResult {
+pub fn load(path: &Path) -> LoadResult {
     let force_depth = 0;
     load_with_depth(path, force_depth, false)
 }
@@ -65,12 +65,16 @@ fn load_internal<T>(buf : *T, w : c_int, h : c_int, d : c_int) -> Image<T> {
     }
 }
 
-pub fn load_with_depth(path: ~str, force_depth: uint, convert_hdr:bool) -> LoadResult {
+pub fn load_with_depth(path: &Path, force_depth: uint, convert_hdr: bool) -> LoadResult {
     unsafe {
         let mut width = 0 as c_int;
         let mut height = 0 as c_int;
         let mut depth = 0 as c_int;
-        path.to_c_str().with_ref(|bytes| {
+        let path_as_str = match path.as_str() {
+            Some(s) => s,
+            None => return Error(~"path is not valid utf8"),
+        };
+        path_as_str.with_c_str(|bytes| {
             if !convert_hdr && stbi_is_hdr(bytes)!=0   {
                 let buffer = stbi_loadf(bytes,
                                         &mut width,
