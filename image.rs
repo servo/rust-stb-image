@@ -72,7 +72,7 @@ pub fn load_with_depth(path: &Path, force_depth: uint, convert_hdr: bool) -> Loa
         let mut depth = 0 as c_int;
         let path_as_str = match path.as_str() {
             Some(s) => s,
-            None => return Error(~"path is not valid utf8"),
+            None => return Error("path is not valid utf8".to_owned()),
         };
         path_as_str.with_c_str(|bytes| {
             if !convert_hdr && stbi_is_hdr(bytes)!=0   {
@@ -82,7 +82,7 @@ pub fn load_with_depth(path: &Path, force_depth: uint, convert_hdr: bool) -> Loa
                                         &mut depth,
                                         force_depth as c_int);
                 if buffer.is_null() {
-                    Error(~"stbi_loadf failed")
+                    Error("stbi_loadf failed".to_owned())
                 } else {
                     ImageF32(load_internal(buffer, width, height, depth))
                 }
@@ -93,7 +93,7 @@ pub fn load_with_depth(path: &Path, force_depth: uint, convert_hdr: bool) -> Loa
                                        &mut depth,
                                        force_depth as c_int);
                 if buffer.is_null() {
-                    Error(~"stbi_load failed")
+                    Error("stbi_load failed".to_owned())
                 } else {
                     ImageU8(load_internal(buffer, width, height, depth))
                 }
@@ -120,7 +120,7 @@ pub fn load_from_memory_with_depth(buffer: &[u8], force_depth: uint, convert_hdr
                                                 &mut depth,
                                                 force_depth as c_int);
             if buffer.is_null() {
-                Error(~"stbi_loadf_from_memory failed")
+                Error("stbi_loadf_from_memory failed".to_owned())
             } else {
                 let actual_depth = if force_depth != 0 { force_depth as c_int } else { depth };
                 ImageF32(load_internal(buffer, width, height, actual_depth))
@@ -133,7 +133,7 @@ pub fn load_from_memory_with_depth(buffer: &[u8], force_depth: uint, convert_hdr
                                                &mut depth,
                                                force_depth as c_int);
             if buffer.is_null() {
-                Error(~"stbi_load_from_memory failed")
+                Error("stbi_load_from_memory failed".to_owned())
             } else {
                 let actual_depth = if force_depth != 0 { force_depth as c_int } else { depth };
                 ImageU8(load_internal(buffer, width, height, actual_depth))
