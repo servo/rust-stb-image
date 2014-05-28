@@ -31,7 +31,7 @@ pub fn new_image<T>(width: uint, height: uint, depth: uint, data: Vec<T>) -> Ima
 }
 
 pub enum LoadResult {
-    Error(StrBuf),
+    Error(String),
     ImageU8(Image<u8>),
     ImageF32(Image<f32>),
 }
