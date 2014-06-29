@@ -51,7 +51,7 @@ pub fn load(path: &Path) -> LoadResult {
 }
 
 
-fn load_internal<T: Clone>(buf : *T, w : c_int, h : c_int, d : c_int) -> Image<T> {
+fn load_internal<T: Clone>(buf : *const T, w : c_int, h : c_int, d : c_int) -> Image<T> {
     unsafe {
         // FIXME: Shouldn't copy; instead we should use a sendable resource. They
         // aren't particularly safe yet though.
