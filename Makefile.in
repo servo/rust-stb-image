@@ -7,9 +7,6 @@ AR ?= ar
 RUSTC ?= rustc
 RUSTFLAGS ?=
 
-STB_IMAGE_C_SRC=src/stb_image.c
-STB_IMAGE_OBJS=$(STB_IMAGE_C_SRC:%.c=%.o)
-
 RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 
 CFLAGS += -fPIC
@@ -17,17 +14,17 @@ CFLAGS += -fPIC
 .PHONY: all
 all:	libstb-image.dummy
 
-%.o:	%.c
+stb_image.o: src/stb_image.c
 	$(CC) $< -o $@ -c $(CFLAGS)
 
-libstb-image.dummy: src/lib.rs $(RUST_SRC) ./libstb-image.a
+libstb-image.dummy: src/lib.rs $(RUST_SRC) libstb-image.a
 	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
 	touch $@
 
-stb-image-test: src/lib.rs $(RUST_SRC) ./libstb-image.a
+stb-image-test: src/lib.rs $(RUST_SRC) libstb-image.a
 	$(RUSTC) $(RUSTFLAGS) $< -o $@ --test
 
-./libstb-image.a: $(STB_IMAGE_OBJS)
+libstb-image.a: stb_image.o
 	$(AR) rcs $@ $^
 
 check: stb-image-test

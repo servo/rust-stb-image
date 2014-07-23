@@ -12,7 +12,7 @@ use stb_image::bindgen::*;
 use std::any::Any;
 use libc;
 use libc::{c_void, c_int};
-use std::slice::raw::buf_as_slice;
+use std::slice::raw::mut_buf_as_slice;
 
 pub struct Image<T> {
     pub width   : uint,
@@ -51,11 +51,11 @@ pub fn load(path: &Path) -> LoadResult {
 }
 
 
-fn load_internal<T: Clone>(buf : *const T, w : c_int, h : c_int, d : c_int) -> Image<T> {
+fn load_internal<T: Clone>(buf: *mut T, w: c_int, h: c_int, d: c_int) -> Image<T> {
     unsafe {
         // FIXME: Shouldn't copy; instead we should use a sendable resource. They
         // aren't particularly safe yet though.
-        let data = buf_as_slice(buf, (w * h * d) as uint, |s| { Vec::from_slice(s) });
+        let data = mut_buf_as_slice(buf, (w * h * d) as uint, |s| { Vec::from_slice(s) });
         libc::free(buf as *mut c_void);
         Image::<T>{
             width   : w as uint,
