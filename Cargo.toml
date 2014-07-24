@@ -1,0 +1,16 @@
+[package]
+
+name = "stb_image"
+version = "0.0.1"
+authors = [
+	"brson",
+	"metajack",
+	"pcwalton",
+]
+
+build = "./build.sh"
+
+[[lib]]
+name = "stb_image"
+path = "src/lib.rs"
+
