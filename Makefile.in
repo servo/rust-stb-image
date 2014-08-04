@@ -6,6 +6,9 @@ CXXFLAGS ?=
 AR ?= ar
 RUSTC ?= rustc
 RUSTFLAGS ?=
+RUSTDOC ?= rustdoc
+RUSTDOC_FLAGS ?=
+RUSTDOC_TARGET ?= doc
 
 RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 
@@ -26,6 +29,12 @@ stb-image-test: src/lib.rs $(RUST_SRC) libstb-image.a
 
 libstb-image.a: stb_image.o
 	$(AR) rcs $@ $^
+
+.PHONY: doc
+doc: $(RUSTDOC_TARGET)/stb_image/index.html
+
+$(RUSTDOC_TARGET)/stb_image/index.html: src/lib.rs $(RUST_SRC) libstb-image.a
+	$(RUSTDOC) $(RUSTDOC_FLAGS) $< -o $(RUSTDOC_TARGET)
 
 check: stb-image-test
 	./stb-image-test

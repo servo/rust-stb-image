@@ -6,3 +6,4 @@
 *.rlib
 *.so
 Makefile
+/doc
