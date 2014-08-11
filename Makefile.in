@@ -15,13 +15,13 @@ RUST_SRC=$(shell find $(VPATH)/. -type f -name '*.rs')
 CFLAGS += -fPIC
 
 .PHONY: all
-all:	libstb-image.dummy
+all:	libstb-image-servo.dummy
 
 stb_image.o: src/stb_image.c
 	$(CC) $< -o $@ -c $(CFLAGS)
 
-libstb-image.dummy: src/lib.rs $(RUST_SRC) libstb-image.a
-	$(RUSTC) $(RUSTFLAGS) $< --out-dir .
+libstb-image-servo.dummy: src/lib.rs $(RUST_SRC) libstb-image.a
+	$(RUSTC) $(RUSTFLAGS) $< --out-dir . -C extra-filename=-servo
 	touch $@
 
 stb-image-test: src/lib.rs $(RUST_SRC) libstb-image.a
