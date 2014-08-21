@@ -10,7 +10,7 @@ authors = [
 
 build = "./build.sh"
 
-[[lib]]
+[lib]
 name = "stb_image"
 path = "src/lib.rs"
 

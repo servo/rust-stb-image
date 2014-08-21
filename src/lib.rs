@@ -12,7 +12,6 @@
 
 #![feature(globs)]
 
-extern crate std;
 extern crate libc;
 
 pub mod stb_image;
