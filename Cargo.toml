@@ -1,16 +1,7 @@
 [package]
 
 name = "stb_image"
-version = "0.0.1"
-authors = [
-	"brson",
-	"metajack",
-	"pcwalton",
-]
+version = "0.1.0"
+authors = ["The Servo Project Developers"]
 
 build = "./build.sh"
-
-[lib]
-name = "stb_image"
-path = "src/lib.rs"
-

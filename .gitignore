@@ -8,4 +8,4 @@
 Makefile
 /doc
 /target
-Cargo.lock
+/Cargo.lock
