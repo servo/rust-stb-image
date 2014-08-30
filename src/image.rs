@@ -9,7 +9,6 @@
 
 use stb_image::bindgen::*;
 
-use std::any::Any;
 use libc;
 use libc::{c_void, c_int};
 use std::slice::raw::mut_buf_as_slice;
@@ -34,15 +33,6 @@ pub enum LoadResult {
     Error(String),
     ImageU8(Image<u8>),
     ImageF32(Image<f32>),
-}
-
-impl LoadResult {
-    pub fn from_result(res: Result<LoadResult,Box<Any + 'static>>)-> LoadResult {
-        match res {
-            Ok(res) => res,
-            Err(e)  => Error(e.to_string()),
-        }
-    }
 }
 
 pub fn load(path: &Path) -> LoadResult {
