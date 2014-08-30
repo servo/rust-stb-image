@@ -37,7 +37,7 @@ pub enum LoadResult {
 }
 
 impl LoadResult {
-    pub fn from_result(res: Result<LoadResult,Box<Any>>)-> LoadResult {
+    pub fn from_result(res: Result<LoadResult,Box<Any + 'static>>)-> LoadResult {
         match res {
             Ok(res) => res,
             Err(e)  => Error(e.to_string()),
