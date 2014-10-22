@@ -45,7 +45,7 @@ fn load_internal<T: Clone>(buf: *mut T, w: c_int, h: c_int, d: c_int) -> Image<T
     unsafe {
         // FIXME: Shouldn't copy; instead we should use a sendable resource. They
         // aren't particularly safe yet though.
-        let data = mut_buf_as_slice(buf, (w * h * d) as uint, |s| { Vec::from_slice(s) });
+        let data = mut_buf_as_slice(buf, (w * h * d) as uint, |s| { s.to_vec() });
         libc::free(buf as *mut c_void);
         Image::<T>{
             width   : w as uint,
