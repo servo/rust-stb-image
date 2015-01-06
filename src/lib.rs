@@ -10,10 +10,7 @@
 #![crate_name = "stb_image"]
 #![crate_type = "rlib"]
 
-#![feature(globs)]
-
 extern crate libc;
 
 pub mod stb_image;
 pub mod image;
-
