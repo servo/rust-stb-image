@@ -11,7 +11,8 @@ use stb_image::bindgen::*;
 
 use libc;
 use libc::{c_void, c_int};
-use std::slice::raw::mut_buf_as_slice;
+use std::slice::from_raw_mut_buf;
+use std::ffi::CString;
 
 pub struct Image<T> {
     pub width   : uint,
@@ -45,7 +46,7 @@ fn load_internal<T: Clone>(buf: *mut T, w: c_int, h: c_int, d: c_int) -> Image<T
     unsafe {
         // FIXME: Shouldn't copy; instead we should use a sendable resource. They
         // aren't particularly safe yet though.
-        let data = mut_buf_as_slice(buf, (w * h * d) as uint, |s| { s.to_vec() });
+        let data = from_raw_mut_buf(&buf, (w * h * d) as uint).to_vec();
         libc::free(buf as *mut c_void);
         Image::<T>{
             width   : w as uint,
@@ -64,31 +65,30 @@ pub fn load_with_depth(path: &Path, force_depth: uint, convert_hdr: bool) -> Loa
             Some(s) => s,
             None => return LoadResult::Error("path is not valid utf8".to_string()),
         };
-        path_as_str.with_c_str(|bytes| {
-            if !convert_hdr && stbi_is_hdr(bytes)!=0   {
-                let buffer = stbi_loadf(bytes,
-                                        &mut width,
-                                        &mut height,
-                                        &mut depth,
-                                        force_depth as c_int);
-                if buffer.is_null() {
-                    LoadResult::Error("stbi_loadf failed".to_string())
-                } else {
-                    LoadResult::ImageF32(load_internal(buffer, width, height, depth))
-                }
+        let bytes = CString::from_slice(path_as_str.as_bytes()).as_ptr();
+        if !convert_hdr && stbi_is_hdr(bytes)!=0   {
+            let buffer = stbi_loadf(bytes,
+                                    &mut width,
+                                    &mut height,
+                                    &mut depth,
+                                    force_depth as c_int);
+            if buffer.is_null() {
+                LoadResult::Error("stbi_loadf failed".to_string())
             } else {
-                let buffer = stbi_load(bytes,
-                                       &mut width,
-                                       &mut height,
-                                       &mut depth,
-                                       force_depth as c_int);
-                if buffer.is_null() {
-                    LoadResult::Error("stbi_load failed".to_string())
-                } else {
-                    LoadResult::ImageU8(load_internal(buffer, width, height, depth))
-                }
+                LoadResult::ImageF32(load_internal(buffer, width, height, depth))
             }
-        })
+        } else {
+            let buffer = stbi_load(bytes,
+                                   &mut width,
+                                   &mut height,
+                                   &mut depth,
+                                   force_depth as c_int);
+            if buffer.is_null() {
+                LoadResult::Error("stbi_load failed".to_string())
+            } else {
+                LoadResult::ImageU8(load_internal(buffer, width, height, depth))
+            }
+        }
     }
 }
 
