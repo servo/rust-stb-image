@@ -11,16 +11,16 @@ use stb_image::bindgen::*;
 
 use libc;
 use libc::{c_void, c_int};
-use std::slice::raw::mut_buf_as_slice;
+use std::ffi::CString;
 
 pub struct Image<T> {
-    pub width   : uint,
-    pub height  : uint,
-    pub depth   : uint,
+    pub width   : usize,
+    pub height  : usize,
+    pub depth   : usize,
     pub data    : Vec<T>,
 }
 
-pub fn new_image<T>(width: uint, height: uint, depth: uint, data: Vec<T>) -> Image<T> {
+pub fn new_image<T>(width: usize, height: usize, depth: usize, data: Vec<T>) -> Image<T> {
     Image::<T> {
         width   : width,
         height  : height,
@@ -45,50 +45,49 @@ fn load_internal<T: Clone>(buf: *mut T, w: c_int, h: c_int, d: c_int) -> Image<T
     unsafe {
         // FIXME: Shouldn't copy; instead we should use a sendable resource. They
         // aren't particularly safe yet though.
-        let data = mut_buf_as_slice(buf, (w * h * d) as uint, |s| { s.to_vec() });
+        let data = Vec::from_raw_buf(buf, (w * h * d) as usize);
         libc::free(buf as *mut c_void);
         Image::<T>{
-            width   : w as uint,
-            height  : h as uint,
-            depth   : d as uint,
+            width   : w as usize,
+            height  : h as usize,
+            depth   : d as usize,
             data    : data}
     }
 }
 
-pub fn load_with_depth(path: &Path, force_depth: uint, convert_hdr: bool) -> LoadResult {
+pub fn load_with_depth(path: &Path, force_depth: usize, convert_hdr: bool) -> LoadResult {
+    let mut width = 0 as c_int;
+    let mut height = 0 as c_int;
+    let mut depth = 0 as c_int;
+    let path_as_cstr = match path.as_str() {
+	Some(s) => CString::from_slice(s.as_bytes()),
+	None => return LoadResult::Error("path is not valid utf8".to_string()),
+    };
     unsafe {
-        let mut width = 0 as c_int;
-        let mut height = 0 as c_int;
-        let mut depth = 0 as c_int;
-        let path_as_str = match path.as_str() {
-            Some(s) => s,
-            None => return LoadResult::Error("path is not valid utf8".to_string()),
-        };
-        path_as_str.with_c_str(|bytes| {
-            if !convert_hdr && stbi_is_hdr(bytes)!=0   {
-                let buffer = stbi_loadf(bytes,
-                                        &mut width,
-                                        &mut height,
-                                        &mut depth,
-                                        force_depth as c_int);
-                if buffer.is_null() {
-                    LoadResult::Error("stbi_loadf failed".to_string())
-                } else {
-                    LoadResult::ImageF32(load_internal(buffer, width, height, depth))
-                }
-            } else {
-                let buffer = stbi_load(bytes,
-                                       &mut width,
-                                       &mut height,
-                                       &mut depth,
-                                       force_depth as c_int);
-                if buffer.is_null() {
-                    LoadResult::Error("stbi_load failed".to_string())
-                } else {
-                    LoadResult::ImageU8(load_internal(buffer, width, height, depth))
-                }
-            }
-        })
+	let bytes = path_as_cstr.as_ptr();
+	if !convert_hdr && stbi_is_hdr(bytes)!=0   {
+	    let buffer = stbi_loadf(bytes,
+				    &mut width,
+				    &mut height,
+				    &mut depth,
+				    force_depth as c_int);
+	    if buffer.is_null() {
+		LoadResult::Error("stbi_loadf failed".to_string())
+	    } else {
+		LoadResult::ImageF32(load_internal(buffer, width, height, depth))
+	    }
+	} else {
+	    let buffer = stbi_load(bytes,
+				   &mut width,
+				   &mut height,
+				   &mut depth,
+				   force_depth as c_int);
+	    if buffer.is_null() {
+		LoadResult::Error("stbi_load failed".to_string())
+	    } else {
+		LoadResult::ImageU8(load_internal(buffer, width, height, depth))
+	    }
+	}
     }
 }
 
@@ -97,7 +96,7 @@ pub fn load_from_memory(buffer: &[u8]) -> LoadResult {
     load_from_memory_with_depth(buffer, force_depth, false)
 }
 
-pub fn load_from_memory_with_depth(buffer: &[u8], force_depth: uint, convert_hdr:bool) -> LoadResult {
+pub fn load_from_memory_with_depth(buffer: &[u8], force_depth: usize, convert_hdr:bool) -> LoadResult {
     unsafe {
         let mut width = 0 as c_int;
         let mut height = 0 as c_int;
