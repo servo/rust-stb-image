@@ -25,6 +25,7 @@ pub mod bindgen {
     use libc::*;
 
     pub type stbi_uc = c_uchar;
+    #[allow(missing_copy_implementations)]
     #[repr(C)]
     pub struct stbi_io_callbacks {
         _read: *mut u8,
