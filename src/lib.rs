@@ -10,7 +10,7 @@
 #![crate_name = "stb_image"]
 #![crate_type = "rlib"]
 
-#![feature(collections, std_misc, path, libc)]
+#![feature(collections, std_misc, libc)]
 
 extern crate libc;
 
