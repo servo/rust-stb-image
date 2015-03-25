@@ -11,7 +11,8 @@ use stb_image::bindgen::*;
 
 use libc;
 use libc::{c_void, c_int};
-use std::ffi::CString;
+use std::ffi::{AsOsStr, CString};
+use std::path::AsPath;
 
 pub struct Image<T> {
     pub width   : usize,
@@ -35,7 +36,7 @@ pub enum LoadResult {
     ImageF32(Image<f32>),
 }
 
-pub fn load(path: &Path) -> LoadResult {
+pub fn load<T: AsPath+AsOsStr>(path: T) -> LoadResult {
     let force_depth = 0;
     load_with_depth(path, force_depth, false)
 }
@@ -55,13 +56,16 @@ fn load_internal<T: Clone>(buf: *mut T, w: c_int, h: c_int, d: c_int) -> Image<T
     }
 }
 
-pub fn load_with_depth(path: &Path, force_depth: usize, convert_hdr: bool) -> LoadResult {
+pub fn load_with_depth<T: AsOsStr+AsPath>(path: T, force_depth: usize, convert_hdr: bool) -> LoadResult {
     let mut width = 0 as c_int;
     let mut height = 0 as c_int;
     let mut depth = 0 as c_int;
-    let path_as_cstr = match path.as_str() {
-	Some(s) => CString::from_slice(s.as_bytes()),
-	None => return LoadResult::Error("path is not valid utf8".to_string()),
+    let path_as_cstr = match path.as_os_str().to_str() {
+	   Some(s) => match CString::new(s.as_bytes()) {
+            Ok(s) => s,
+            Err(_) => return LoadResult::Error("path contains null character".to_string())
+       },
+	   None => return LoadResult::Error("path is not valid utf8".to_string()),
     };
     unsafe {
 	let bytes = path_as_cstr.as_ptr();
