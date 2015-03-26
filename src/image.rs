@@ -11,8 +11,9 @@ use stb_image::bindgen::*;
 
 use libc;
 use libc::{c_void, c_int};
+use std::convert::AsRef;
 use std::ffi::{AsOsStr, CString};
-use std::path::AsPath;
+use std::path::Path;
 
 pub struct Image<T> {
     pub width   : usize,
@@ -36,7 +37,7 @@ pub enum LoadResult {
     ImageF32(Image<f32>),
 }
 
-pub fn load<T: AsPath+AsOsStr>(path: T) -> LoadResult {
+pub fn load<T: AsRef<Path>+AsOsStr>(path: T) -> LoadResult {
     let force_depth = 0;
     load_with_depth(path, force_depth, false)
 }
@@ -56,7 +57,7 @@ fn load_internal<T: Clone>(buf: *mut T, w: c_int, h: c_int, d: c_int) -> Image<T
     }
 }
 
-pub fn load_with_depth<T: AsOsStr+AsPath>(path: T, force_depth: usize, convert_hdr: bool) -> LoadResult {
+pub fn load_with_depth<T: AsOsStr+AsRef<Path>>(path: T, force_depth: usize, convert_hdr: bool) -> LoadResult {
     let mut width = 0 as c_int;
     let mut height = 0 as c_int;
     let mut depth = 0 as c_int;
