@@ -10,8 +10,6 @@
 #![crate_name = "stb_image"]
 #![crate_type = "rlib"]
 
-#![feature(collections, convert, std_misc, libc)]
-
 extern crate libc;
 
 pub mod stb_image;

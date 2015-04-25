@@ -12,8 +12,9 @@ use stb_image::bindgen::*;
 use libc;
 use libc::{c_void, c_int};
 use std::convert::AsRef;
-use std::ffi::{AsOsStr, CString};
+use std::ffi::CString;
 use std::path::Path;
+use std::slice;
 
 pub struct Image<T> {
     pub width   : usize,
@@ -37,7 +38,7 @@ pub enum LoadResult {
     ImageF32(Image<f32>),
 }
 
-pub fn load<T: AsRef<Path>+AsOsStr>(path: T) -> LoadResult {
+pub fn load<T: AsRef<Path>>(path: T) -> LoadResult {
     let force_depth = 0;
     load_with_depth(path, force_depth, false)
 }
@@ -47,7 +48,7 @@ fn load_internal<T: Clone>(buf: *mut T, w: c_int, h: c_int, d: c_int) -> Image<T
     unsafe {
         // FIXME: Shouldn't copy; instead we should use a sendable resource. They
         // aren't particularly safe yet though.
-        let data = Vec::from_raw_buf(buf, (w * h * d) as usize);
+        let data = slice::from_raw_parts(buf, (w * h * d) as usize).to_vec();
         libc::free(buf as *mut c_void);
         Image::<T>{
             width   : w as usize,
@@ -57,11 +58,11 @@ fn load_internal<T: Clone>(buf: *mut T, w: c_int, h: c_int, d: c_int) -> Image<T
     }
 }
 
-pub fn load_with_depth<T: AsOsStr+AsRef<Path>>(path: T, force_depth: usize, convert_hdr: bool) -> LoadResult {
+pub fn load_with_depth<T: AsRef<Path>>(path: T, force_depth: usize, convert_hdr: bool) -> LoadResult {
     let mut width = 0 as c_int;
     let mut height = 0 as c_int;
     let mut depth = 0 as c_int;
-    let path_as_cstr = match path.as_os_str().to_str() {
+    let path_as_cstr = match path.as_ref().as_os_str().to_str() {
 	   Some(s) => match CString::new(s.as_bytes()) {
             Ok(s) => s,
             Err(_) => return LoadResult::Error("path contains null character".to_string())
