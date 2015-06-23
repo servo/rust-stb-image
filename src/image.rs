@@ -9,7 +9,6 @@
 
 use stb_image::bindgen::*;
 
-use libc;
 use libc::{c_void, c_int};
 use std::convert::AsRef;
 use std::ffi::CString;
@@ -49,7 +48,7 @@ fn load_internal<T: Clone>(buf: *mut T, w: c_int, h: c_int, d: c_int) -> Image<T
         // FIXME: Shouldn't copy; instead we should use a sendable resource. They
         // aren't particularly safe yet though.
         let data = slice::from_raw_parts(buf, (w * h * d) as usize).to_vec();
-        libc::free(buf as *mut c_void);
+        stbi_image_free(buf as *mut c_void);
         Image::<T>{
             width   : w as usize,
             height  : h as usize,
