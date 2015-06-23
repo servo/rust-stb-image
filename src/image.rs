@@ -23,12 +23,14 @@ pub struct Image<T> {
     pub data    : Vec<T>,
 }
 
-pub fn new_image<T>(width: usize, height: usize, depth: usize, data: Vec<T>) -> Image<T> {
-    Image::<T> {
-        width   : width,
-        height  : height,
-        depth   : depth,
-        data    : data,
+impl<T> Image<T> {
+    pub fn new(width: usize, height: usize, depth: usize, data: Vec<T>) -> Image<T> {
+        Image::<T> {
+            width   : width,
+            height  : height,
+            depth   : depth,
+            data    : data,
+        }
     }
 }
 
