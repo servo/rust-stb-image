@@ -33,7 +33,6 @@ pub mod bindgen {
         _eof: *mut u8,
     }
 
-#[link(name = "stb-image", kind = "static")]
 extern {
 
 pub fn stbi_load_from_memory(buffer: *const stbi_uc, len: c_int, x: *mut c_int, y: *mut c_int, comp: *mut c_int, req_comp: c_int) -> *mut stbi_uc;
