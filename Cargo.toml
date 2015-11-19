@@ -2,7 +2,11 @@
 name = "stb_image"
 version = "0.2.0"
 authors = ["The Servo Project Developers"]
+description = "Bindings to the stb image encoding/decoding library"
+repository = "https://github.com/servo/rust-stb-image"
 documentation = "http://doc.servo.org/stb_image/"
+keywords = ["image", "jpeg", "png", "bmp", "psd", "gif", "hdr", "pic", "pnm"]
+license = "MIT / Apache-2.0"
 
 build = "build.rs"
 
