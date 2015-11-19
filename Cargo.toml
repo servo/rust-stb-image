@@ -1,10 +1,10 @@
 [package]
 name = "stb_image"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["The Servo Project Developers"]
 documentation = "http://doc.servo.org/stb_image/"
 
 build = "build.rs"
 
 [dependencies]
-libc = "*"
+libc = "0.2.0"
