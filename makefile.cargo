@@ -22,6 +22,12 @@ endif
 
 CFLAGS += -fPIC
 
+ifeq ($(DEBUG),true)
+  CFLAGS += -g
+else
+  CFLAGS += -O3
+endif
+
 .PHONY: all
 all: $(OUT_DIR)/libstb-image.a
 
