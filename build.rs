@@ -2,18 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-use std::env;
-use std::process::{Command, Stdio};
+extern crate gcc;
 
 fn main() {
-    let out_dir = env::var("OUT_DIR").unwrap();
-    let result = Command::new("make")
-        .args(&["-R", "-f", "makefile.cargo"])
-        .stdout(Stdio::inherit())
-        .stderr(Stdio::inherit())
-        .status()
-        .unwrap();
-    assert!(result.success());
-    println!("cargo:rustc-link-search=native={}", out_dir);
-    println!("cargo:rustc-link-lib=static=stb-image");
+    gcc::compile_library("libstb_image.a", &["src/stb_image.c"]);
 }

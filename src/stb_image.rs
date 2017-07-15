@@ -12,9 +12,9 @@
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
 
-use libc::*;
+//use libc::*;
 
-type enum_unnamed1 = c_uint;
+//type enum_unnamed1 = c_uint;
 //static STBI_default: u32 = 0_u32;
 //static STBI_grey: u32 = 1_u32;
 //static STBI_grey_alpha: u32 = 2_u32;
