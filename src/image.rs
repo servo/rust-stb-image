@@ -7,9 +7,16 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use stb_image::bindgen::*;
+use stb_image::stbi_is_hdr_from_memory;
+use stb_image::stbi_load_from_memory;
+use stb_image::stbi_loadf_from_memory;
+use stb_image::stbi_load;
+use stb_image::stbi_loadf;
+use stb_image::stbi_is_hdr;
+use stb_image::stbi_image_free;
 
-use libc::{c_void, c_int};
+//use libc::{c_void, c_int};
+use std::os::raw::{c_void, c_int};
 use std::convert::AsRef;
 use std::ffi::CString;
 use std::path::Path;
