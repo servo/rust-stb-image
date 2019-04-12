@@ -10,7 +10,7 @@
 #![crate_name = "stb_image"]
 #![crate_type = "rlib"]
 
-extern crate libc;
+//extern crate libc;
 
 pub mod image;
 pub mod stb_image;
