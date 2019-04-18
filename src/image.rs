@@ -15,7 +15,6 @@ use stb_image::stbi_loadf;
 use stb_image::stbi_is_hdr;
 use stb_image::stbi_image_free;
 
-//use libc::{c_void, c_int};
 use std::os::raw::{c_void, c_int};
 use std::convert::AsRef;
 use std::ffi::CString;

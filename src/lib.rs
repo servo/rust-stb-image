@@ -10,8 +10,6 @@
 #![crate_name = "stb_image"]
 #![crate_type = "rlib"]
 
-//extern crate libc;
-
 #[allow(non_upper_case_globals)]
 #[allow(non_snake_case)]
 #[allow(non_camel_case_types)]
