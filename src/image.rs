@@ -15,6 +15,9 @@ use stb_image::stbi_loadf;
 use stb_image::stbi_is_hdr;
 use stb_image::stbi_image_free;
 
+#[cfg(feature = "use_libc")]
+use libc::{c_void, c_int};
+#[cfg(not(feature = "use_libc"))]
 use std::os::raw::{c_void, c_int};
 use std::convert::AsRef;
 use std::ffi::CString;
@@ -139,6 +142,60 @@ pub fn load_from_memory_with_depth(buffer: &[u8], force_depth: usize, convert_hd
             } else {
                 let actual_depth = if force_depth != 0 { force_depth as c_int } else { depth };
                 LoadResult::ImageU8(load_internal(buffer, width, height, actual_depth))
+            }
+        }
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use std::fs::File;
+    use std::io::Read;
+    use image::{self};
+
+    #[test]
+    fn load_image_from_file() {
+        let fs = File::open("test.png");
+        match fs {
+            Ok(mut fs) => {
+                let mut data: Vec<u8>;
+                let metadata = fs.metadata();
+                match metadata {
+                    Ok(metadata) => {
+                        let file_size = metadata.len();
+                        data = vec![0; file_size as usize];
+                        match fs.read(&mut data) {
+                            Ok(_read_size) => {
+                                let img = image::load_from_memory(&data);
+                                match img {
+                                    image::LoadResult::ImageU8(img) => {
+                                        println!("{}x{}", img.width, img.height);
+                                        assert_eq!(img.width, 26);
+                                        assert_eq!(img.height, 37);
+                                    },   
+                                    image::LoadResult::ImageF32(img) => {
+                                        println!("{}x{}", img.width, img.height);
+                                        assert_eq!(img.width, 26);
+                                        assert_eq!(img.height, 37);
+                                    },   
+                                    image::LoadResult::Error(_e) => {
+                                        panic!("Cannot load image");
+                                    }
+                                }
+                            },
+                            Err(_e) => {
+                                panic!("Cannot read from file");
+                            }
+                        }
+                    },
+                    Err(_e) => {
+                        panic!("Cannot reasd file metadata");
+                    }
+                }
+            },
+            Err(_e) => {
+                panic!("Cannot open file");
             }
         }
     }

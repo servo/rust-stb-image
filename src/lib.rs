@@ -10,9 +10,14 @@
 #![crate_name = "stb_image"]
 #![crate_type = "rlib"]
 
+#[cfg(feature = "use_libc")]
+extern crate libc;
+
 #[allow(non_upper_case_globals)]
 #[allow(non_snake_case)]
 #[allow(non_camel_case_types)]
-pub mod stb_image;
+pub mod stb_image {
+    include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+}
 pub mod image;
 
