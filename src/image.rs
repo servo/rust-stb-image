@@ -63,6 +63,7 @@ pub fn load_with_depth<T: AsRef<Path>>(path: T, force_depth: usize, convert_hdr:
     let mut width = 0 as c_int;
     let mut height = 0 as c_int;
     let mut depth = 0 as c_int;
+    let force_depth = force_depth as c_int;
     let path_as_cstr = match path.as_ref().as_os_str().to_str() {
 	   Some(s) => match CString::new(s.as_bytes()) {
             Ok(s) => s,
@@ -77,22 +78,24 @@ pub fn load_with_depth<T: AsRef<Path>>(path: T, force_depth: usize, convert_hdr:
 				    &mut width,
 				    &mut height,
 				    &mut depth,
-				    force_depth as c_int);
+				    force_depth);
 	    if buffer.is_null() {
-		LoadResult::Error("stbi_loadf failed".to_string())
+		    LoadResult::Error("stbi_loadf failed".to_string())
 	    } else {
-		LoadResult::ImageF32(load_internal(buffer, width, height, depth))
+        let actual_depth = if force_depth != 0 { force_depth } else { depth };
+		    LoadResult::ImageF32(load_internal(buffer, width, height, actual_depth))
 	    }
 	} else {
 	    let buffer = stbi_load(bytes,
 				   &mut width,
 				   &mut height,
 				   &mut depth,
-				   force_depth as c_int);
+				   force_depth);
 	    if buffer.is_null() {
-		LoadResult::Error("stbi_load failed".to_string())
+		    LoadResult::Error("stbi_load failed".to_string())
 	    } else {
-		LoadResult::ImageU8(load_internal(buffer, width, height, depth))
+        let actual_depth = if force_depth != 0 { force_depth } else { depth };
+		    LoadResult::ImageU8(load_internal(buffer, width, height, actual_depth))
 	    }
 	}
     }
@@ -108,17 +111,18 @@ pub fn load_from_memory_with_depth(buffer: &[u8], force_depth: usize, convert_hd
         let mut width = 0 as c_int;
         let mut height = 0 as c_int;
         let mut depth = 0 as c_int;
+        let force_depth = force_depth as c_int;
         if !convert_hdr && stbi_is_hdr_from_memory(buffer.as_ptr(), buffer.len() as c_int) != 0 {
             let buffer = stbi_loadf_from_memory(buffer.as_ptr(),
                                                 buffer.len() as c_int,
                                                 &mut width,
                                                 &mut height,
                                                 &mut depth,
-                                                force_depth as c_int);
+                                                force_depth);
             if buffer.is_null() {
                 LoadResult::Error("stbi_loadf_from_memory failed".to_string())
             } else {
-                let actual_depth = if force_depth != 0 { force_depth as c_int } else { depth };
+                let actual_depth = if force_depth != 0 { force_depth } else { depth };
                 LoadResult::ImageF32(load_internal(buffer, width, height, actual_depth))
             }
         } else {
@@ -127,11 +131,11 @@ pub fn load_from_memory_with_depth(buffer: &[u8], force_depth: usize, convert_hd
                                                &mut width,
                                                &mut height,
                                                &mut depth,
-                                               force_depth as c_int);
+                                               force_depth);
             if buffer.is_null() {
                 LoadResult::Error("stbi_load_from_memory failed".to_string())
             } else {
-                let actual_depth = if force_depth != 0 { force_depth as c_int } else { depth };
+                let actual_depth = if force_depth != 0 { force_depth } else { depth };
                 LoadResult::ImageU8(load_internal(buffer, width, height, actual_depth))
             }
         }
