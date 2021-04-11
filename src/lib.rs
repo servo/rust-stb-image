@@ -12,6 +12,5 @@
 
 extern crate libc;
 
-pub mod stb_image;
 pub mod image;
-
+pub mod stb_image;
