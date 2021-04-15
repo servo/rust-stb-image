@@ -20,4 +20,3 @@ pub mod stb_image {
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 }
 pub mod image;
-pub mod stb_image;
