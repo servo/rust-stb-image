@@ -7,7 +7,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use stb_image::bindgen::*;
+use stb_image::*;
 
 use libc::{c_int, c_void};
 use std::convert::AsRef;
@@ -25,10 +25,10 @@ pub struct Image<T> {
 impl<T> Image<T> {
     pub fn new(width: usize, height: usize, depth: usize, data: Vec<T>) -> Image<T> {
         Image::<T> {
-            width: width,
-            height: height,
-            depth: depth,
-            data: data,
+            width,
+            height,
+            depth,
+            data,
         }
     }
 }
@@ -54,7 +54,7 @@ fn load_internal<T: Clone>(buf: *mut T, w: c_int, h: c_int, d: c_int) -> Image<T
             width: w as usize,
             height: h as usize,
             depth: d as usize,
-            data: data,
+            data,
         }
     }
 }
