@@ -7,10 +7,9 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![crate_name = "stb_image"]
-#![crate_type = "rlib"]
-
 extern crate libc;
 
 pub mod image;
+
+#[allow(non_snake_case, non_camel_case_types)]
 pub mod stb_image;

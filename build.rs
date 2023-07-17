@@ -4,9 +4,12 @@
 
 fn main() {
     let mut build = cc::Build::new();
-    
+
+    println!("cargo:rerun-if-changed=src/stb_image.c");
+
     build
         .cpp(true)
+        .define("STB_IMAGE_IMPLEMENTATION", None)
         .file("src/stb_image.c");
 
     build.compile("libstb_image");
